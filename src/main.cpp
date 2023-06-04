@@ -134,7 +134,7 @@ int main()
 
 //  Load textures
     Texture2D tBox;
-    bool res = tBox.loadFromFile("res/textures/trchimken.png");
+    bool res = tBox.loadFromFile("res/textures/grass_box.png");
 
     Texture2D tFloor;
     res = tFloor.loadFromFile("res/textures/trstone2.png");
@@ -154,8 +154,41 @@ int main()
 
     std::vector<Vertex> cube_vertices;
     std::vector<GLuint> cube_indices;
+    std::vector<glm::vec2> tex_coords =
+    {
+//      Front
+        { 1.0f / 3.0f, 0.0f },
+        { 1.0f / 3.0f * 2.0f, 0.0f },
+        { 1.0f / 3.0f * 2.0f, 1.0f },
+        { 1.0f / 3.0f, 1.0f },
+//      Back
+        { 1.0f / 3.0f, 0.0f },
+        { 1.0f / 3.0f * 2.0f, 0.0f },
+        { 1.0f / 3.0f * 2.0f, 1.0f },
+        { 1.0f / 3.0f, 1.0f },
+//      Bottom
+        { 1.0f / 3.0f * 2.0f, 0.0f },
+        { 1.0f, 0.0f },
+        { 1.0f, 1.0f },
+        { 1.0f / 3.0f * 2.0f, 1.0f },
+//      Top
+        { 0.0f, 0.0f },
+        { 1.0f / 3.0f, 0.0f },
+        { 1.0f / 3.0f, 1.0f },
+        { 0.0f, 1.0f },
+//      Left
+        { 1.0f / 3.0f, 0.0f },
+        { 1.0f / 3.0f * 2.0f, 0.0f },
+        { 1.0f / 3.0f * 2.0f, 1.0f },
+        { 1.0f / 3.0f, 1.0f },
+//      Right
+        { 1.0f / 3.0f, 0.0f },
+        { 1.0f / 3.0f * 2.0f, 0.0f },
+        { 1.0f / 3.0f * 2.0f, 1.0f },
+        { 1.0f / 3.0f, 1.0f }
+    };
 
-    MakeCubeMesh(cube_vertices, cube_indices, minPt, maxPt);
+    MakeCubeMesh(cube_vertices, cube_indices, minPt, maxPt, tex_coords.data());
 
     TexturedCube cube(&default_shader);
     cube.setTexture(&tBox);
@@ -216,6 +249,7 @@ int main()
         renderer.clear();
 
         static float a = 0;
+        a += 1.0f;
 
         renderer.draw(surface);
         
@@ -226,7 +260,7 @@ int main()
                     if (mass[x][y][z])
                     {
                         cube.setPosition(x, y, z);
-                        cube.setRotation(a); a += 0.01f;
+                        cube.setRotation(a); 
                         renderer.draw(cube);
                     }           
                 }

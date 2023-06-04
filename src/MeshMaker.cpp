@@ -1,40 +1,87 @@
 #include "MeshMaker.hpp"
 
-void MakeCubeMesh(std::vector<Vertex>& vertices, std::vector<GLuint>& indices, const glm::vec3& minPt, const glm::vec3& maxPt)
+void MakeCubeMesh(std::vector<Vertex>& vertices, std::vector<GLuint>& indices, const glm::vec3& minPt, const glm::vec3& maxPt, const glm::vec2* uv)
 {
-    vertices = 
+    const static glm::vec2 cubeUV[] = // one texture on all faces by default
     {
-//      Front
-        {{ minPt.x, minPt.y, maxPt.z }, glm::vec3(), { 0.0f, 0.0f }},
-        {{ maxPt.x, minPt.y, maxPt.z }, glm::vec3(), { 1.0f, 0.0f }},
-        {{ maxPt.x, maxPt.y, maxPt.z }, glm::vec3(), { 1.0f, 1.0f }},
-        {{ minPt.x, maxPt.y, maxPt.z }, glm::vec3(), { 0.0f, 1.0f }},
-//      Back
-        {{ maxPt.x, minPt.y, minPt.z }, glm::vec3(), { 0.0f, 0.0f }},
-        {{ minPt.x, minPt.y, minPt.z }, glm::vec3(), { 1.0f, 0.0f }},
-        {{ minPt.x, maxPt.y, minPt.z }, glm::vec3(), { 1.0f, 1.0f }},
-        {{ maxPt.x, maxPt.y, minPt.z }, glm::vec3(), { 0.0f, 1.0f }},
-//      Bottom
-        {{ minPt.x, minPt.y, minPt.z }, glm::vec3(), { 0.0f, 0.0f }},
-        {{ maxPt.x, minPt.y, minPt.z }, glm::vec3(), { 1.0f, 0.0f }},
-        {{ maxPt.x, minPt.y, maxPt.z }, glm::vec3(), { 1.0f, 1.0f }},
-        {{ minPt.x, minPt.y, maxPt.z }, glm::vec3(), { 0.0f, 1.0f }},
-//      Top
-        {{ minPt.x, maxPt.y, maxPt.z }, glm::vec3(), { 0.0f, 0.0f }},
-        {{ maxPt.x, maxPt.y, maxPt.z }, glm::vec3(), { 1.0f, 0.0f }},
-        {{ maxPt.x, maxPt.y, minPt.z }, glm::vec3(), { 1.0f, 1.0f }},
-        {{ minPt.x, maxPt.y, minPt.z }, glm::vec3(), { 0.0f, 1.0f }},
-//      Left
-        {{ minPt.x, minPt.y, minPt.z }, glm::vec3(), { 0.0f, 0.0f }},
-        {{ minPt.x, minPt.y, maxPt.z }, glm::vec3(), { 1.0f, 0.0f }},
-        {{ minPt.x, maxPt.y, maxPt.z }, glm::vec3(), { 1.0f, 1.0f }},
-        {{ minPt.x, maxPt.y, minPt.z }, glm::vec3(), { 0.0f, 1.0f }},
-//      Right
-        {{ maxPt.x, minPt.y, maxPt.z }, glm::vec3(), { 0.0f, 0.0f }},
-        {{ maxPt.x, minPt.y, minPt.z }, glm::vec3(), { 1.0f, 0.0f }},
-        {{ maxPt.x, maxPt.y, minPt.z }, glm::vec3(), { 1.0f, 1.0f }},
-        {{ maxPt.x, maxPt.y, maxPt.z }, glm::vec3(), { 0.0f, 1.0f }}
+        { 0.0f, 0.0f },
+        { 1.0f, 0.0f },
+        { 1.0f, 1.0f },
+        { 0.0f, 1.0f }
     };
+
+    if( ! uv)
+    {
+        vertices = 
+        {
+    //      Front
+            {{ minPt.x, minPt.y, maxPt.z }, glm::vec3(), cubeUV[0]},
+            {{ maxPt.x, minPt.y, maxPt.z }, glm::vec3(), cubeUV[1]},
+            {{ maxPt.x, maxPt.y, maxPt.z }, glm::vec3(), cubeUV[2]},
+            {{ minPt.x, maxPt.y, maxPt.z }, glm::vec3(), cubeUV[3]},
+    //      Back
+            {{ maxPt.x, minPt.y, minPt.z }, glm::vec3(), cubeUV[0]},
+            {{ minPt.x, minPt.y, minPt.z }, glm::vec3(), cubeUV[1]},
+            {{ minPt.x, maxPt.y, minPt.z }, glm::vec3(), cubeUV[2]},
+            {{ maxPt.x, maxPt.y, minPt.z }, glm::vec3(), cubeUV[3]},
+    //      Bottom
+            {{ minPt.x, minPt.y, minPt.z }, glm::vec3(), cubeUV[0]},
+            {{ maxPt.x, minPt.y, minPt.z }, glm::vec3(), cubeUV[1]},
+            {{ maxPt.x, minPt.y, maxPt.z }, glm::vec3(), cubeUV[2]},
+            {{ minPt.x, minPt.y, maxPt.z }, glm::vec3(), cubeUV[3]},
+    //      Top
+            {{ minPt.x, maxPt.y, maxPt.z }, glm::vec3(), cubeUV[0]},
+            {{ maxPt.x, maxPt.y, maxPt.z }, glm::vec3(), cubeUV[1]},
+            {{ maxPt.x, maxPt.y, minPt.z }, glm::vec3(), cubeUV[2]},
+            {{ minPt.x, maxPt.y, minPt.z }, glm::vec3(), cubeUV[3]},
+    //      Left
+            {{ minPt.x, minPt.y, minPt.z }, glm::vec3(), cubeUV[0]},
+            {{ minPt.x, minPt.y, maxPt.z }, glm::vec3(), cubeUV[1]},
+            {{ minPt.x, maxPt.y, maxPt.z }, glm::vec3(), cubeUV[2]},
+            {{ minPt.x, maxPt.y, minPt.z }, glm::vec3(), cubeUV[3]},
+    //      Right
+            {{ maxPt.x, minPt.y, maxPt.z }, glm::vec3(), cubeUV[0]},
+            {{ maxPt.x, minPt.y, minPt.z }, glm::vec3(), cubeUV[1]},
+            {{ maxPt.x, maxPt.y, minPt.z }, glm::vec3(), cubeUV[2]},
+            {{ maxPt.x, maxPt.y, maxPt.z }, glm::vec3(), cubeUV[3]}
+        };
+    }
+    else
+    {
+        vertices = 
+        {
+    //      Front
+            {{ minPt.x, minPt.y, maxPt.z }, glm::vec3(), uv[0]},
+            {{ maxPt.x, minPt.y, maxPt.z }, glm::vec3(), uv[1]},
+            {{ maxPt.x, maxPt.y, maxPt.z }, glm::vec3(), uv[2]},
+            {{ minPt.x, maxPt.y, maxPt.z }, glm::vec3(), uv[3]},
+    //      Back
+            {{ maxPt.x, minPt.y, minPt.z }, glm::vec3(), uv[4]},
+            {{ minPt.x, minPt.y, minPt.z }, glm::vec3(), uv[5]},
+            {{ minPt.x, maxPt.y, minPt.z }, glm::vec3(), uv[6]},
+            {{ maxPt.x, maxPt.y, minPt.z }, glm::vec3(), uv[7]},
+    //      Bottom
+            {{ minPt.x, minPt.y, minPt.z }, glm::vec3(), uv[8]},
+            {{ maxPt.x, minPt.y, minPt.z }, glm::vec3(), uv[9]},
+            {{ maxPt.x, minPt.y, maxPt.z }, glm::vec3(), uv[10]},
+            {{ minPt.x, minPt.y, maxPt.z }, glm::vec3(), uv[11]},
+    //      Top
+            {{ minPt.x, maxPt.y, maxPt.z }, glm::vec3(), uv[12]},
+            {{ maxPt.x, maxPt.y, maxPt.z }, glm::vec3(), uv[13]},
+            {{ maxPt.x, maxPt.y, minPt.z }, glm::vec3(), uv[14]},
+            {{ minPt.x, maxPt.y, minPt.z }, glm::vec3(), uv[15]},
+    //      Left
+            {{ minPt.x, minPt.y, minPt.z }, glm::vec3(), uv[16]},
+            {{ minPt.x, minPt.y, maxPt.z }, glm::vec3(), uv[17]},
+            {{ minPt.x, maxPt.y, maxPt.z }, glm::vec3(), uv[18]},
+            {{ minPt.x, maxPt.y, minPt.z }, glm::vec3(), uv[19]},
+    //      Right
+            {{ maxPt.x, minPt.y, maxPt.z }, glm::vec3(), uv[20]},
+            {{ maxPt.x, minPt.y, minPt.z }, glm::vec3(), uv[21]},
+            {{ maxPt.x, maxPt.y, minPt.z }, glm::vec3(), uv[22]},
+            {{ maxPt.x, maxPt.y, maxPt.z }, glm::vec3(), uv[23]}
+        };
+    }
 
     indices.resize(36);
 

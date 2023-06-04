@@ -13,7 +13,7 @@ struct Vertex
 	glm::vec2 uv;
 };
 
-void MakeCubeMesh(std::vector<Vertex>& vertices, std::vector<GLuint>& indices, const glm::vec3& minPt, const glm::vec3& maxPt);
+void MakeCubeMesh(std::vector<Vertex>& vertices, std::vector<GLuint>& indices, const glm::vec3& minPt, const glm::vec3& maxPt, const glm::vec2* uv = nullptr);
 void MakeRepeatedSurfaceMesh(std::vector<Vertex>& vertices, std::vector<GLuint>& indices, GLuint width, GLuint height);
 
 #endif
