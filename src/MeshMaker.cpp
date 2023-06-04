@@ -115,8 +115,8 @@ void MakeRepeatedSurfaceMesh(std::vector<Vertex>& vertices, std::vector<GLuint>&
         {
             auto& vertex = vertices.emplace_back();
 
-            vertex.pos.x = j - half_w;
-            vertex.pos.z = i - half_h;
+            vertex.position.x = j - half_w;
+            vertex.position.z = i - half_h;
             vertex.uv.x = j;
             vertex.uv.y = i;
         }

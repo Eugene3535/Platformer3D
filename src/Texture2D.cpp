@@ -4,7 +4,7 @@
 #define STBI_ONLY_PNG
 #define STBI_ONLY_JPEG
 
-#include "stb/stb_image.h"
+#include "stb_image.h"
 
 Texture2D::Texture2D()  noexcept: 
     m_size(),

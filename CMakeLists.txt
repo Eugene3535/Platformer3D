@@ -15,7 +15,7 @@ add_subdirectory($ENV{External}/glfw-3.3.8 external/glfw)
 add_subdirectory($ENV{External}/glm external/glm)
 add_subdirectory($ENV{External}/glad external/glad)
 
-target_include_directories(${PROJECT_NAME} PRIVATE $ENV{External})
+target_include_directories(${PROJECT_NAME} PRIVATE $ENV{External}/stb)
 
 target_link_libraries(${PROJECT_NAME} glfw glm glad)
 

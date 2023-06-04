@@ -188,6 +188,8 @@ int main()
         { 1.0f / 3.0f, 1.0f }
     };
 
+// 384
+
     MakeCubeMesh(cube_vertices, cube_indices, minPt, maxPt, tex_coords.data());
 
     TexturedCube cube(&default_shader);
