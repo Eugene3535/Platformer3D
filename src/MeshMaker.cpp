@@ -4,10 +4,10 @@ void MakeCubeMesh(std::vector<Vertex>& vertices, std::vector<GLuint>& indices, c
 {
     const static glm::vec2 cubeUV[] = // one texture on all faces by default
     {
-        { 0.0f, 0.0f },
-        { 1.0f, 0.0f },
+        { 0.0f, 1.0f },
         { 1.0f, 1.0f },
-        { 0.0f, 1.0f }
+        { 1.0f, 0.0f },
+        { 0.0f, 0.0f }
     };
 
     if( ! uv)

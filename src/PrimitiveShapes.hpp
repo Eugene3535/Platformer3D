@@ -27,8 +27,10 @@ public:
     ~TexturedCube();
 
     void setTexture(class Texture2D* pTexture) noexcept;
+    void setTextureRect(const glm::ivec4& rect) noexcept;
     void setTextureRect(const glm::ivec4& rect, Face face) noexcept;
-    void init(const std::vector<Vertex>& vertices, const std::vector<GLuint>& indices, const glm::vec3& bounds) noexcept;
+
+    void init(const std::vector<Vertex>& vertices, const std::vector<GLuint>& indices, const glm::vec3& bounds, int usage = GL_STATIC_DRAW) noexcept;
 
     Texture2D*       getTexture() noexcept;
     const glm::vec3& getBounds() const noexcept;
@@ -51,7 +53,7 @@ public:
 	~TexturedSurface();
 
     void setTexture(class Texture2D* pTexture) noexcept;
-    void init(const std::vector<Vertex>& vertices, const std::vector<GLuint>& indices, const glm::vec3& bounds) noexcept;
+    void init(const std::vector<Vertex>& vertices, const std::vector<GLuint>& indices, const glm::vec3& bounds, int usage = GL_STATIC_DRAW) noexcept;
 
     Texture2D*       getTexture() noexcept;
     const glm::vec3& getBounds() const noexcept;

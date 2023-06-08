@@ -13,7 +13,7 @@ VertexBuffer::~VertexBuffer()
     destroy();
 }
 
-bool VertexBuffer::create(const std::vector<Vertex>& vertices, const std::vector<GLuint>& indices) noexcept
+bool VertexBuffer::create(const std::vector<Vertex>& vertices, const std::vector<GLuint>& indices, int usage) noexcept
 {
 #ifdef DEBUG
     if(vao) destroy();
@@ -29,7 +29,7 @@ bool VertexBuffer::create(const std::vector<Vertex>& vertices, const std::vector
     glBindVertexArray(vao);
 
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * vertices.size(), vertices.data(), GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * vertices.size(), vertices.data(), usage);
 
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), nullptr);
     glEnableVertexAttribArray(0);

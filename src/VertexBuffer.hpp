@@ -13,7 +13,7 @@ public:
     VertexBuffer& operator =(const VertexBuffer&& buffer) = delete;
     ~VertexBuffer();
 
-    bool create(const std::vector<Vertex>& vertices, const std::vector<GLuint>& indices) noexcept;
+    bool create(const std::vector<Vertex>& vertices, const std::vector<GLuint>& indices, int usage = GL_STATIC_DRAW) noexcept;
     void destroy() noexcept;
 
 public:

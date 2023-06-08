@@ -134,7 +134,7 @@ int main()
 
 //  Load textures
     Texture2D tBox;
-    bool res = tBox.loadFromFile("res/textures/grass_box.png");
+    bool res = tBox.loadFromFile("res/textures/anim_tiles.png");
 
     Texture2D tFloor;
     res = tFloor.loadFromFile("res/textures/trstone2.png");
@@ -188,14 +188,13 @@ int main()
         { 1.0f / 3.0f, 1.0f }
     };
 
-// 384
-
-    MakeCubeMesh(cube_vertices, cube_indices, minPt, maxPt, tex_coords.data());
+    MakeCubeMesh(cube_vertices, cube_indices, minPt, maxPt);
 
     TexturedCube cube(&default_shader);
     cube.setTexture(&tBox);
-    cube.init(cube_vertices, cube_indices, glm::vec3(0.5));
+    cube.init(cube_vertices, cube_indices, glm::vec3(0.5), GL_DYNAMIC_DRAW);
     cube.setAxisOfRotation(glm::vec3(0, 1, 0));
+    cube.setTextureRect(glm::ivec4(0, 0, 32, 32));
 
 //  Create floor
     std::vector<Vertex> floor_vertices;
@@ -252,6 +251,18 @@ int main()
 
         static float a = 0;
         a += 1.0f;
+
+        static int delay = 0;
+        static int frame = 0;
+        
+        if(++delay > 30)
+        {
+            delay = 0;
+            ++frame;
+
+            if(frame >= 4) frame = 0;
+            cube.setTextureRect(glm::ivec4(frame * 32, 0, 32, 32));
+        }
 
         renderer.draw(surface);
         
