@@ -1,7 +1,8 @@
 #include "Defines.hpp"
 #include "Texture2D.hpp"
 #include "Shader.hpp"
-#include "PrimitiveShapes.hpp"
+#include "TexturedSurface.hpp"
+#include "TexturedCube.hpp"
 #include "RenderTarget.hpp"
 #include "MeshMaker.hpp"
 #include "Camera.hpp"
@@ -197,15 +198,14 @@ int main()
     cube.setTextureRect(glm::ivec4(0, 0, 32, 32));
 
 //  Create floor
-    std::vector<Vertex> floor_vertices;
-    std::vector<GLuint> floor_indices;
+//    std::vector<Vertex> floor_vertices;
+//    std::vector<GLuint> floor_indices;
 
-    MakeRepeatedSurfaceMesh(floor_vertices, floor_indices, map_size, map_size);
+//    MakeRepeatedSurfaceMesh(floor_vertices, floor_indices, map_size, map_size);
 
     TexturedSurface surface(&default_shader);
-    surface.init(floor_vertices, floor_indices, glm::vec3(1.0f));
+    surface.create(map_size, map_size);
     surface.setTexture(&tFloor);
-
     surface.setPosition(10, -3, 10);
 
 //  Main loop
@@ -238,6 +238,9 @@ int main()
         if (IsKeyPressed(GLFW_KEY_D))
             camera.move(Camera::RIGHT, deltaTime);
 
+        if (IsKeyPressed(GLFW_KEY_R))
+            cube.setColor(Color::Cyan);
+
         if (camNeedUpdate)
         {
             camera.rotate(xoffset * 0.1f, yoffset * 0.1f);
@@ -255,7 +258,7 @@ int main()
         static int delay = 0;
         static int frame = 0;
         
-        if(++delay > 30)
+        if(++delay > 10)
         {
             delay = 0;
             ++frame;
