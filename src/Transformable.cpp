@@ -31,6 +31,11 @@ void Transformable::setPosition(const glm::vec3& position) noexcept
     m_matrixNeedUpdate = true;
 }
 
+void Transformable::setAxisOfRotation(float dx, float dy, float dz) noexcept
+{
+    m_axisOfRotation = { dx, dy, dz };
+}
+
 void Transformable::setAxisOfRotation(const glm::vec3& axis) noexcept
 {
     m_axisOfRotation = axis;

@@ -30,8 +30,6 @@ bool Texture2D::loadFromFile(const std::string& filepath) noexcept
     setRepeated(false);
     setSmooth(false);
 
-//    stbi_set_flip_vertically_on_load(true);
-
     int bytePerPixel = 0;
     unsigned char* pData = stbi_load(filepath.c_str(), &m_size.x, &m_size.y, &bytePerPixel, STBI_rgb_alpha);
 
@@ -78,7 +76,7 @@ void Texture2D::setRepeated(bool repeat) noexcept
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
 
-        float border_color[] { 0.0f, 0.0f, 0.0f, 1.0f };
+        const static float border_color[] { 0.0f, 0.0f, 0.0f, 1.0f };
         glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, border_color);
 
         m_is_repeated = false;

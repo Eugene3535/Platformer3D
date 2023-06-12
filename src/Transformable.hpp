@@ -13,6 +13,7 @@ public:
     void setPosition(float x, float y, float z) noexcept;
     void setPosition(const glm::vec3& position) noexcept;
 
+    void setAxisOfRotation(float dx = 0.0f, float dy = 0.0f, float dz = 0.0f) noexcept;
     void setAxisOfRotation(const glm::vec3& axis = glm::vec3(1.0f)) noexcept;
     void setRotation(float degrees)                                 noexcept;
     void rotate(float degrees)                                      noexcept;

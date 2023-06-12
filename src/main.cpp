@@ -3,8 +3,6 @@
 #include "Shader.hpp"
 #include "TexturedSurface.hpp"
 #include "TexturedCube.hpp"
-#include "RenderTarget.hpp"
-#include "MeshMaker.hpp"
 #include "Camera.hpp"
 
 #include <iostream>
@@ -12,15 +10,17 @@
 const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
 
-const GLuint map_size = 20;
+const GLuint map_width = 10;
+const GLuint map_height = 10;
+const GLuint map_length = 75;
 
-bool mass[map_size][map_size][map_size];
+bool mass[map_width][map_height][map_length];
 
 bool check(int x, int y, int z)
 {
-   if ((x < 0) || (x >= map_size) || 
-	   (y < 0) || (y >= map_size) || 
-	   (z < 0) || (z >= map_size)) return false;
+   if ((x < 0) || (x >= map_width) || 
+	   (y < 0) || (y >= map_height) || 
+	   (z < 0) || (z >= map_length)) return false;
   
    return mass[x][y][z];
 }
@@ -70,9 +70,9 @@ int main()
 {
     int cube_count = 0;
 
-    for (int x = 0; x < map_size; ++x)
-        for (int y = 0; y < map_size; ++y)
-            for (int z = 0; z < map_size; ++z)
+    for (int x = 0; x < map_width; ++x)
+        for (int y = 0; y < map_height; ++y)
+            for (int z = 0; z < map_length; ++z)
             { //   floor generation
                 if (/*y == 0 || */ rand() % 100 == 1)
                 {
@@ -138,7 +138,7 @@ int main()
     bool res = tBox.loadFromFile("res/textures/anim_tiles.png");
 
     Texture2D tFloor;
-    res = tFloor.loadFromFile("res/textures/trstone2.png");
+    res = tFloor.loadFromFile("res/textures/stone_block.png");
     tFloor.setRepeated(true);
 
 //  Shaders
@@ -150,69 +150,29 @@ int main()
     default_shader.setUniform("projection", projection);
 
 //  Create cube
-    glm::vec3 minPt(-0.5f);
-    glm::vec3 maxPt(0.5f);
-
-    std::vector<Vertex> cube_vertices;
-    std::vector<GLuint> cube_indices;
-    std::vector<glm::vec2> tex_coords =
-    {
-//      Front
-        { 1.0f / 3.0f, 0.0f },
-        { 1.0f / 3.0f * 2.0f, 0.0f },
-        { 1.0f / 3.0f * 2.0f, 1.0f },
-        { 1.0f / 3.0f, 1.0f },
-//      Back
-        { 1.0f / 3.0f, 0.0f },
-        { 1.0f / 3.0f * 2.0f, 0.0f },
-        { 1.0f / 3.0f * 2.0f, 1.0f },
-        { 1.0f / 3.0f, 1.0f },
-//      Bottom
-        { 1.0f / 3.0f * 2.0f, 0.0f },
-        { 1.0f, 0.0f },
-        { 1.0f, 1.0f },
-        { 1.0f / 3.0f * 2.0f, 1.0f },
-//      Top
-        { 0.0f, 0.0f },
-        { 1.0f / 3.0f, 0.0f },
-        { 1.0f / 3.0f, 1.0f },
-        { 0.0f, 1.0f },
-//      Left
-        { 1.0f / 3.0f, 0.0f },
-        { 1.0f / 3.0f * 2.0f, 0.0f },
-        { 1.0f / 3.0f * 2.0f, 1.0f },
-        { 1.0f / 3.0f, 1.0f },
-//      Right
-        { 1.0f / 3.0f, 0.0f },
-        { 1.0f / 3.0f * 2.0f, 0.0f },
-        { 1.0f / 3.0f * 2.0f, 1.0f },
-        { 1.0f / 3.0f, 1.0f }
-    };
-
-    MakeCubeMesh(cube_vertices, cube_indices, minPt, maxPt);
-
     TexturedCube cube(&default_shader);
     cube.setTexture(&tBox);
-    cube.init(cube_vertices, cube_indices, glm::vec3(0.5), GL_DYNAMIC_DRAW);
+    cube.create(glm::vec3(-0.5), glm::vec3(0.5), GL_DYNAMIC_DRAW);
     cube.setAxisOfRotation(glm::vec3(0, 1, 0));
     cube.setTextureRect(glm::ivec4(0, 0, 32, 32));
+    
+//  Create surface
+    TexturedSurface surface1(&default_shader);
+    surface1.create(10, 75);
+    surface1.setTexture(&tFloor);
+    surface1.setPosition(0, 0, 0);
 
-//  Create floor
-//    std::vector<Vertex> floor_vertices;
-//    std::vector<GLuint> floor_indices;
-
-//    MakeRepeatedSurfaceMesh(floor_vertices, floor_indices, map_size, map_size);
-
-    TexturedSurface surface(&default_shader);
-    surface.create(map_size, map_size);
-    surface.setTexture(&tFloor);
-    surface.setPosition(10, -3, 10);
+    TexturedSurface surface2(&default_shader);
+    surface2.create(2, 75);
+    surface2.setTexture(&tFloor);
+    surface2.setAxisOfRotation(0, 0, 1);
+    surface2.setRotation(90.0f);
+    surface2.setPosition(0, -2, 0);
 
 //  Main loop
-    RenderTarget renderer;
 
     Camera camera;
-    camera.setPosition(10, 5, 10);
+    camera.setPosition(2, 5, 3);
 
     while (!glfwWindowShouldClose(pWindow))
     {
@@ -250,10 +210,8 @@ int main()
         default_shader.bind();
         default_shader.setUniform("view", camera.getViewMatrix());
         
-        renderer.clear();
-
-        static float a = 0;
-        a += 1.0f;
+        glClearColor(0, 0, 0, 1);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); 
 
         static int delay = 0;
         static int frame = 0;
@@ -267,17 +225,17 @@ int main()
             cube.setTextureRect(glm::ivec4(frame * 32, 0, 32, 32));
         }
 
-        renderer.draw(surface);
+        surface1.draw();
+        surface2.draw();
         
-        for (int x = 0; x < map_size; ++x)
-            for (int y = 0; y < map_size; ++y)
-                for (int z = 0; z < map_size; ++z)
+        for (int x = 0; x < map_width; ++x)
+            for (int y = 0; y < map_height; ++y)
+                for (int z = 0; z < map_length; ++z)
                 {
                     if (mass[x][y][z])
                     {
                         cube.setPosition(x, y, z);
-                        cube.setRotation(a); 
-                        renderer.draw(cube);
+                        cube.draw();
                     }           
                 }
         
