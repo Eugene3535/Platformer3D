@@ -10,9 +10,9 @@
 const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
 
-const GLuint map_width = 10;
-const GLuint map_height = 10;
-const GLuint map_length = 75;
+const GLuint map_width = 10u;
+const GLuint map_height = 16u;
+const GLuint map_length = 230u;
 
 bool mass[map_width][map_height][map_length];
 
@@ -70,17 +70,17 @@ int main()
 {
     int cube_count = 0;
 
-    for (int x = 0; x < map_width; ++x)
-        for (int y = 0; y < map_height; ++y)
-            for (int z = 0; z < map_length; ++z)
-            { //   floor generation
-                if (/*y == 0 || */ rand() % 100 == 1)
-                {
-                    mass[x][y][z] = true;
-                    cube_count++;
-                }
+    // for (int x = 0; x < map_width; ++x)
+    //     for (int y = 0; y < map_height; ++y)
+    //         for (int z = 0; z < map_length; ++z)
+    //         { //   floor generation
+    //             if (/*y == 0 || */ rand() % 100 == 1)
+    //             {
+    //                 mass[x][y][z] = true;
+    //                 cube_count++;
+    //             }
                 
-            }
+    //         }
 
     std::cout << "Cube count : " << cube_count << '\n';
 
@@ -134,12 +134,15 @@ int main()
 #endif
 
 //  Load textures
-    Texture2D tBox;
-    bool res = tBox.loadFromFile("res/textures/anim_tiles.png");
+    Texture2D anim_tiles;
+    bool res = anim_tiles.loadFromFile("res/textures/anim_tiles.png");
 
     Texture2D tFloor;
     res = tFloor.loadFromFile("res/textures/stone_block.png");
     tFloor.setRepeated(true);
+
+    Texture2D tiles;
+    res = tiles.loadFromFile("res/textures/tiles.png");
 
 //  Shaders
     Shader default_shader;
@@ -151,10 +154,27 @@ int main()
 
 //  Create cube
     TexturedCube cube(&default_shader);
-    cube.setTexture(&tBox);
+    cube.setTexture(&anim_tiles);
     cube.create(glm::vec3(-0.5), glm::vec3(0.5), GL_DYNAMIC_DRAW);
     cube.setAxisOfRotation(glm::vec3(0, 1, 0));
     cube.setTextureRect(glm::ivec4(0, 0, 32, 32));
+
+    std::vector<TexturedCube> blocks(5, &default_shader);
+
+    for (std::size_t i = 0; i < blocks.size(); ++i)
+    {
+        blocks[i].create(glm::vec3(-0.5), glm::vec3(0.5), GL_DYNAMIC_DRAW);
+        blocks[i].setTexture(&tiles);
+        blocks[i].setPosition(5, 6, 26 + i);
+    }
+
+    blocks[0].setTextureRect(glm::ivec4(32, 0, 32, 32));
+    blocks[1].setTexture(&anim_tiles);
+    blocks[1].setTextureRect(glm::ivec4(0, 0, 32, 32));
+    blocks[2].setTextureRect(glm::ivec4(32, 0, 32, 32));
+    blocks[3].setTexture(&anim_tiles);
+    blocks[3].setTextureRect(glm::ivec4(0, 0, 32, 32));
+    blocks[4].setTextureRect(glm::ivec4(32, 0, 32, 32));
     
 //  Create surface
     TexturedSurface surface1(&default_shader);
@@ -215,29 +235,36 @@ int main()
 
         static int delay = 0;
         static int frame = 0;
-        
+        static float R = 0;
+
         if(++delay > 10)
         {
             delay = 0;
             ++frame;
 
             if(frame >= 4) frame = 0;
-            cube.setTextureRect(glm::ivec4(frame * 32, 0, 32, 32));
+            blocks[1].setTextureRect(glm::ivec4(frame * 32, 0, 32, 32));
+            blocks[3].setTextureRect(glm::ivec4(frame * 32, 0, 32, 32));
         }
 
         surface1.draw();
-        surface2.draw();
+//        surface2.draw();
         
-        for (int x = 0; x < map_width; ++x)
-            for (int y = 0; y < map_height; ++y)
-                for (int z = 0; z < map_length; ++z)
-                {
-                    if (mass[x][y][z])
-                    {
-                        cube.setPosition(x, y, z);
-                        cube.draw();
-                    }           
-                }
+        // for (int x = 0; x < map_width; ++x)
+        //     for (int y = 0; y < map_height; ++y)
+        //         for (int z = 0; z < map_length; ++z)
+        //         {
+        //             if (mass[x][y][z])
+        //             {
+        //                 cube.setPosition(x, y, z);
+        //                 cube.draw();
+        //             }           
+        //         }
+        
+        for (auto& block : blocks)
+        {
+            block.draw();
+        }
         
 
         default_shader.unbind();

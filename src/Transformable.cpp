@@ -6,8 +6,7 @@ Transformable::Transformable() noexcept:
     m_rotation(),
     m_axisOfRotation(1.0f),
     m_scale(1.0f),
-    m_angle(0.0f),
-    m_matrixNeedUpdate(false)
+    m_angle(0.0f)
 {
 }
 
@@ -21,14 +20,12 @@ void Transformable::setPosition(float x, float y, float z) noexcept
     m_position.y = y;
     m_position.z = z;
 
-    m_matrixNeedUpdate = true;
+    m_matrix = glm::translate(m_matrix, m_position);
 }
 
 void Transformable::setPosition(const glm::vec3& position) noexcept
 {
-    m_position = position;
-
-    m_matrixNeedUpdate = true;
+    setPosition(position.x, position.y, position.z);
 }
 
 void Transformable::setAxisOfRotation(float dx, float dy, float dz) noexcept
@@ -49,7 +46,7 @@ void Transformable::setRotation(float degrees) noexcept
     if(m_axisOfRotation.y) m_rotation.y = m_angle;
     if(m_axisOfRotation.z) m_rotation.z = m_angle;
 
-    m_matrixNeedUpdate = true;
+    m_matrix = glm::rotate(m_matrix, m_angle, m_axisOfRotation);
 }
 
 void Transformable::rotate(float degrees) noexcept
@@ -63,14 +60,12 @@ void Transformable::setScale(float x, float y, float z) noexcept
     m_scale.y = y;
     m_scale.z = z;
 
-    m_matrixNeedUpdate = true;
+    m_matrix = glm::scale(m_matrix, m_scale);
 }
 
 void Transformable::setScale(const glm::vec3& scale) noexcept
 {
-    m_scale = scale;
-
-    m_matrixNeedUpdate = true;
+    setScale(scale.x, scale.y, scale.z);
 }
 
 void Transformable::setScale(float scale) noexcept
@@ -97,16 +92,5 @@ const glm::vec3& Transformable::getScale() const noexcept
 
 const glm::mat4& Transformable::getMatrix() const noexcept
 {
-    if(m_matrixNeedUpdate)
-    {
-        static const glm::mat4 identity_matrix(glm::identity<glm::mat4>());
-        
-        m_matrix = glm::translate(identity_matrix, m_position) * 
-                   glm::rotate(identity_matrix, m_angle, m_axisOfRotation) * 
-                   glm::scale(identity_matrix, m_scale);
-
-        m_matrixNeedUpdate = false;
-    }
-  
     return m_matrix;
 }

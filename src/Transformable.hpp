@@ -37,7 +37,5 @@ private:
     glm::vec3 m_scale;
 
     float m_angle;
-
-    mutable bool m_matrixNeedUpdate;
 };
 #endif
